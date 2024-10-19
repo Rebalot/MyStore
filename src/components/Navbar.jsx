@@ -7,7 +7,6 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import { useNavigate } from 'react-router-dom';
 import { fetchCategorias } from '../services/faketstoreApi';
 import { useEffect, useState } from 'react';
-import { Button, OverlayTrigger} from 'react-bootstrap';
 
 const expand = 'md'
 export default function NavbarComponent() {

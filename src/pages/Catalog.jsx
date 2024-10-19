@@ -8,10 +8,17 @@ import { CartContext } from "../contexts/CartContext";
 
 
 export default function CatalogComponent() {
-  const isDesktop = useMediaQuery({ query: "(min-width: 1150px)" });
+  const isDesktop = useMediaQuery({ query: "(min-width: 1020px)" });
   const { cart, removeFromCart } = useContext(CartContext);
+  const [isPopoverVisible, setPopoverVisible] = useState(false);
+  const handlePopoverToggle = () => {
+    setPopoverVisible(!isPopoverVisible);
+  };
+  const handlePopoverOpen = () => {
+    setPopoverVisible(true);
+  };
   const popover = (
-    <Popover id="popover-basic" style={{ height: 'calc(100vh - 160px)', width: '300px' }}>
+    <Popover id="popover-basic" className="z-10" style={{ height: 'calc(100vh - 160px)', width: '300px' }}>
       <Popover.Header as="h3">Cart</Popover.Header>
       <Popover.Body className="overflow-y-auto max-h-[calc(100vh-210px)]">
       {cart.length === 0 ? <p>No items in cart</p> : (
@@ -34,44 +41,44 @@ export default function CatalogComponent() {
   );
   
   return (
-    <div className=" mx-auto pl-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Products Catalog</h1>
-      <div className="flex flex-col md:flex-row gap-4 relative">
-        <aside className="w-full min-w-[300px] max-w-[350px] filter-aside relative">
-          <div className="border border-gray-400 p-4 sticky top-[98px]" >FILTROOO</div>
-          {/* <Filters /> */}
-        </aside>
-        <main className="w-full">
+    <div className="mx-auto pl-4 py-8">
+  <h1 className="text-3xl font-bold mb-6">Products Catalog</h1>
+  <div
+    className={`flex flex-col gap-4 relative md:grid ${
+      isDesktop && isPopoverVisible
+        ? "md:grid-cols-[minmax(300px,350px)_auto_275px]"
+        : "md:grid-cols-[minmax(300px,350px)_auto]"
+    }`}
+  >
+    <aside className="min-w-[300px] max-w-[350px] filter-aside relative">
+      <div className="border border-gray-400 p-4 sticky top-[98px]">FILTROOO</div>
+    </aside>
 
-          <ProductsList />
+    <main className="w-full md:pr-5">
+      <ProductsList handlePopoverOpen={handlePopoverOpen}/>
+    </main>
 
-        </main>
+    {/* {isDesktop && isPopoverVisible && (
+      <aside className="min-w-[275px]"></aside>
+    )} */}
 
-        {isDesktop ? (
-          cart.length > 0 ? (
-            <aside className="min-w-[275px]">
-            <div className="fixed bottom-5 right-5">
-            <OverlayTrigger trigger="click" placement="top" overlay={popover}>
-              
-              <Button variant="dark" className="transition rounded-full w-12 h-12 flex items-center justify-center transform hover:scale-105"><ShoppingCart/></Button>
-            </OverlayTrigger>
-          </div>
-            
-          </aside>
-          ):(
-            <div></div>
-          )
-          
-          
-        ) : (
-          <div className="fixed bottom-5 right-5">
-            <OverlayTrigger trigger="click" placement="top" overlay={popover}>
-              
-              <Button variant="dark" className="transition rounded-full w-12 h-12 flex items-center justify-center transform hover:scale-105"><ShoppingCart/></Button>
-            </OverlayTrigger>
-          </div>
-        )}
-      </div>
+    <div className="fixed bottom-5 right-5 z-10">
+      <OverlayTrigger
+        trigger="click"
+        placement="top"
+        overlay={popover}
+        show={isPopoverVisible}
+        onToggle={handlePopoverToggle}
+      >
+        <Button
+          variant="dark"
+          className="transition rounded-full w-12 h-12 flex items-center justify-center transform hover:scale-105"
+        >
+          <ShoppingCart />
+        </Button>
+      </OverlayTrigger>
     </div>
+  </div>
+</div>
   );
 }

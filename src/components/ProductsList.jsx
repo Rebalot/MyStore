@@ -5,7 +5,7 @@ import { useLoading } from "../contexts/LoadingContext";
 import { fetchData } from "../services/faketstoreApi";
 import { Button } from "react-bootstrap";
 
-export default function ProductsList() {
+export default function ProductsList({ handlePopoverOpen }) {
   const [products, setProducts] = useState([]);
   const { addToCart } = useContext(CartContext);
   const [loading, setLoading] = useState(true);
@@ -43,24 +43,29 @@ export default function ProductsList() {
         >
           <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105">
             <NavLink to={`/producto/${product.id}`}>
-            <img
-              src={product.images}
-              alt={product.title}
-              className="w-full h-auto object-contain"
-            />
+              <img
+                src={product.images}
+                alt={product.title}
+                className="w-full h-auto object-contain"
+              />
             </NavLink>
-            
+
             <div className="p-4">
-                <NavLink >
+              <NavLink to={`/producto/${product.id}`}>
                 <h3 className="text-lg font-semibold mb-2">{product.title}</h3>
-                </NavLink>
-              
+              </NavLink>
+
               <div className="flex justify-between">
                 <p className="text-gray-600">${product.price.toFixed(2)}</p>
-                <div className="w-[92px] h-[34px]">
-
-                </div>
-                <Button variant='outline-dark' onClick={() => addToCart(product)} className="absolute p-1 right-4 z-10">
+                <div className="w-[92px] h-[34px]"></div>
+                <Button
+                  variant="outline-dark"
+                  onClick={() => {
+                    addToCart(product);
+                    handlePopoverOpen();
+                  }}
+                  className="absolute p-1 right-4 z-10"
+                >
                   Add to Cart
                 </Button>
               </div>
